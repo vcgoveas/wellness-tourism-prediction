@@ -1,0 +1,47 @@
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r deployment/requirements.txt
+
+    - name: Run Data Preparation and Model Building Script
+      env:
+        HF_TOKEN: ${ secrets.HF_TOKEN }
+        HF_USERNAME: vgoveas
+      run: |
+        python model_building/pipeline.py
+
+    - name: Deploy to Hugging Face Space
+      env:
+        HF_TOKEN: ${ secrets.HF_TOKEN }
+        HF_USERNAME: vgoveas
+        HF_MODEL_REPO: vgoveas/tourism-prediction-model
+        HF_DATASET_REPO: vgoveas/tourism-dataset
+        HF_SPACE_REPO: vgoveas/wellness-tourism-prediction
+      run: |
+        python hosting/hosting.py
+
