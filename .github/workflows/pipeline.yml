@@ -22,17 +22,15 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --no-cache-dir numpy==2.0.2 pandas==2.2.2 scikit-learn==1.6.1 matplotlib==3.9.4 seaborn==0.13.2 joblib==1.4.2 xgboost==2.1.4 requests==2.32.3 huggingface_hub==0.30.1 mlflow==3.0.1 streamlit==1.43.2 hf_xet
+        pip install --no-cache-dir numpy==2.0.2 pandas==2.2.2 scikit-learn==1.6.1 matplotlib==3.9.4 seaborn==0.13.2 joblib==1.4.2 xgboost==2.1.4 requests==2.32.3 huggingface_hub==0.30.1 mlflow==3.0.1 streamlit==1.43.2
 
     - name: Execute Model Training and Saving
       run: |
+        export HF_TOKEN="${{ secrets.HF_TOKEN }}"
         python model_building/train.py
-      env:
-        HF_TOKEN: ${ secrets.HF_TOKEN }
 
     - name: Execute Deployment to Hugging Face Space
       run: |
+        export HF_TOKEN="${{ secrets.HF_TOKEN }}"
         python hosting/hosting.py
-      env:
-        HF_TOKEN: ${ secrets.HF_TOKEN }
 
