@@ -19,6 +19,12 @@ HF_DATASET_REPO = os.environ.get('HF_DATASET_REPO', 'vgoveas/tourism-dataset')
 HF_MODEL_REPO = os.environ.get('HF_MODEL_REPO', 'vgoveas/tourism-prediction-model')
 HF_TOKEN = os.environ.get('HF_TOKEN')
 
+# --- Debugging HF_TOKEN ---
+if HF_TOKEN:
+    print(f"HF_TOKEN environment variable found. Length: {len(HF_TOKEN)} (masked: {HF_TOKEN[:5]}...{HF_TOKEN[-5:]})")
+else:
+    print("HF_TOKEN environment variable is NOT set.")
+
 # Authenticate with Hugging Face by explicitly logging in
 login(token=HF_TOKEN)
 api = HfApi() # HfApi will now pick up the token from the authenticated session
@@ -85,7 +91,7 @@ joblib.dump(label_encoders, LABEL_ENCODERS_PATH_LOCAL)
 print(f"Trained model saved locally to {MODEL_PATH_LOCAL}")
 print(f"Label encoders saved locally to {LABEL_ENCODERS_PATH_LOCAL}")
 
-# --- 6. Upload Model to Hugging Face Model Hub ---
+# --- 6. Upload Model to Hugging Face Model Hub --- 
 print(f"Uploading model to Hugging Face Model Hub: {HF_MODEL_REPO}...")
 try:
     api.repo_info(repo_id=HF_MODEL_REPO, repo_type="model")
