@@ -41,7 +41,7 @@ with st.sidebar:
     productpitched = st.selectbox("Product Pitched", options=list(label_encoders['ProductPitched'].classes_))
     preferredpropertystar = st.selectbox("Preferred Property Star", options=[3, 4, 5])
     maritalstatus = st.selectbox("Marital Status", options=list(label_encoders['MaritalStatus'].classes_))
-    numberoftrips = st.number_input("Number of Trips Annually", min_value=0, max_value=50, value=5)
+    numberoftrips = st.number_input("NumberOfTrips Annually", min_value=0, max_value=50, value=5)
     passport = st.selectbox("Passport", options=[0, 1], format_func=lambda x: "Yes" if x == 1 else "No")
     pitchsatisfactionscore = st.slider("Pitch Satisfaction Score", min_value=1, max_value=5, value=3)
     owncar = st.selectbox("Own Car", options=[0, 1], format_func=lambda x: "Yes" if x == 1 else "No")
