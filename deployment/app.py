@@ -1,4 +1,7 @@
 
+import sys
+print("DEBUG: app.py started execution. (via sys.stderr)", file=sys.stderr)
+
 import streamlit as st
 import pandas as pd
 import joblib
