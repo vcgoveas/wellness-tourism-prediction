@@ -15,7 +15,6 @@ HF_MODEL_REPO = 'vgoveas/tourism-prediction-model'
 @st.cache_resource
 def load_artifacts():
     try:
-        # Download from HF Hub (uses HF_TOKEN from environment automatically)
         model_path = hf_hub_download(repo_id=HF_MODEL_REPO, filename='best_model.joblib', repo_type='model')
         le_path = hf_hub_download(repo_id=HF_DATASET_REPO, filename='label_encoders.joblib', repo_type='dataset')
         return joblib.load(model_path), joblib.load(le_path)
@@ -27,7 +26,6 @@ model, label_encoders = load_artifacts()
 
 if model and label_encoders:
     st.success('System Ready')
-    
     with st.sidebar:
         st.header('Customer Information')
         age = st.number_input('Age', min_value=18, max_value=90, value=35)
@@ -48,7 +46,6 @@ if model and label_encoders:
         numberofchildrenvisiting = st.number_input('Children Visiting', min_value=0, max_value=5, value=0)
         designation = st.selectbox('Designation', options=list(label_encoders['Designation'].classes_))
         monthlyincome = st.number_input('Monthly Income', min_value=0, value=50000)
-
         predict_button = st.button('Predict Purchase')
 
     if predict_button:
@@ -69,7 +66,6 @@ if model and label_encoders:
         input_df = pd.DataFrame([input_dict])
         prediction = model.predict(input_df)[0]
         proba = model.predict_proba(input_df)[0][1]
-        
         st.subheader('Prediction Results')
         if prediction == 1:
             st.success(f'Likely to purchase! (Probability: {proba:.2f})')
