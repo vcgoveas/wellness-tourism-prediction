@@ -1,18 +1,15 @@
 
-name: CI/CD Pipeline
+name: CI/CD Pipeline for Wellness Tourism Prediction
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
     - name: Checkout repository
@@ -25,23 +22,21 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --upgrade pip
-        pip install -r deployment/requirements.txt
+        pip install --no-cache-dir numpy pandas scikit-learn matplotlib seaborn joblib xgboost requests huggingface_hub mlflow streamlit
 
-    - name: Run Data Preparation and Model Building Script
-      env:
-        HF_TOKEN: ${ secrets.HF_TOKEN }
-        HF_USERNAME: vgoveas
+    - name: Configure Hugging Face login
       run: |
-        python model_building/pipeline.py
+        echo "${ secrets.HF_TOKEN }" | huggingface-cli login
 
-    - name: Deploy to Hugging Face Space
+    - name: Execute Model Training and Saving
+      run: |
+        python model_building/train.py
       env:
         HF_TOKEN: ${ secrets.HF_TOKEN }
-        HF_USERNAME: vgoveas
-        HF_MODEL_REPO: vgoveas/tourism-prediction-model
-        HF_DATASET_REPO: vgoveas/tourism-dataset
-        HF_SPACE_REPO: vgoveas/wellness-tourism-prediction
+
+    - name: Execute Deployment to Hugging Face Space
       run: |
         python hosting/hosting.py
+      env:
+        HF_TOKEN: ${ secrets.HF_TOKEN }
 
