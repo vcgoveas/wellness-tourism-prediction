@@ -25,7 +25,7 @@ def push_to_hf_space():
     try:
         api.repo_info(repo_id=HF_SPACE_REPO, repo_type="space")
         # Escaping the inner double quotes for the format placeholder
-        print("Space repo \"{}\" already exists.".format(HF_SPACE_REPO))
+        print("Space repo "{}" already exists.".format(HF_SPACE_REPO))
     except HfHubHTTPError:
         print("Creating Space repo: {}.".format(HF_SPACE_REPO))
         create_repo(repo_id=HF_SPACE_REPO, repo_type="space", private=False, space_sdk="docker")
