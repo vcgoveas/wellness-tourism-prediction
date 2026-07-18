@@ -7,9 +7,9 @@ import numpy as np
 import os
 from huggingface_hub import hf_hub_download, login
 
+# Configure page for HF health checks
 st.set_page_config(page_title="Wellness Tourism Package Predictor", layout="wide")
 st.title("🌴 Wellness Tourism Package Purchase Prediction")
-st.markdown("Enter customer details to predict the likelihood of purchasing the Wellness Tourism Package.")
 
 HF_DATASET_REPO = "vgoveas/tourism-dataset"
 HF_MODEL_REPO = "vgoveas/tourism-prediction-model"
@@ -18,14 +18,19 @@ HF_MODEL_REPO = "vgoveas/tourism-prediction-model"
 def load_artifacts():
     hf_token = os.environ.get("HF_TOKEN")
     if not hf_token:
-        st.error("HF_TOKEN environment variable not found. Please ensure it's set as a Space Secret.")
+        st.error("HF_TOKEN environment variable not found.")
         st.stop()
     login(token=hf_token)
     model_path = hf_hub_download(repo_id=HF_MODEL_REPO, filename="best_model.joblib", repo_type="model")
     le_path = hf_hub_download(repo_id=HF_DATASET_REPO, filename="label_encoders.joblib", repo_type="dataset")
     return joblib.load(model_path), joblib.load(le_path)
 
-model, label_encoders = load_artifacts()
+try:
+    model, label_encoders = load_artifacts()
+    st.success("Artifacts loaded successfully!")
+except Exception as e:
+    st.error(f"Failed to load artifacts: {e}")
+    st.stop()
 
 with st.sidebar:
     st.header("Customer Information")
