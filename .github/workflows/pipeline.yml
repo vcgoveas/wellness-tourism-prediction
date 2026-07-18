@@ -22,11 +22,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --no-cache-dir numpy pandas scikit-learn matplotlib seaborn joblib xgboost requests huggingface_hub mlflow streamlit
+        pip install --no-cache-dir numpy==2.0.2 pandas==2.2.2 scikit-learn==1.6.1 matplotlib==3.10.0 seaborn==0.13.2 joblib==1.4.2 xgboost==2.1.4 requests==2.32.3 huggingface_hub==0.30.1 mlflow==3.0.1 streamlit==1.43.2
 
     - name: Configure Hugging Face login
       run: |
-        echo "${ secrets.HF_TOKEN }" | huggingface-cli login
+        echo "${ secrets.HF_TOKEN }" | python -m huggingface_hub.hf_cli login
 
     - name: Execute Model Training and Saving
       run: |
