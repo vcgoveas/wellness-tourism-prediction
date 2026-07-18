@@ -4,7 +4,8 @@ import pandas as pd
 import joblib
 import numpy as np
 import os
-from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download, login
+from huggingface_hub.utils import HfHubHTTPError # Import for specific error handling
 
 st.set_page_config(page_title="Wellness Tourism Package Predictor", layout="wide")
 st.title("🌴 Wellness Tourism Package Purchase Prediction")
@@ -21,6 +22,20 @@ st.write(f"[DEBUG] HF_MODEL_REPO: {HF_MODEL_REPO}")
 @st.cache_resource
 def load_artifacts():
     st.write("[DEBUG] Starting to load artifacts...")
+    hf_token = os.environ.get("HF_TOKEN")
+
+    if not hf_token:
+        st.error("[CRITICAL ERROR] HF_TOKEN environment variable not found. Please ensure it's set as a Space Secret.")
+        st.stop() # Stop the app if token is missing
+    else:
+        st.write(f"[DEBUG] HF_TOKEN found. Length: {len(hf_token)} (masked: {hf_token[:5]}...{hf_token[-5:]})")
+        try:
+            login(token=hf_token)
+            st.write("[DEBUG] Hugging Face login successful.")
+        except Exception as e:
+            st.error(f"[CRITICAL ERROR] Hugging Face login failed with provided HF_TOKEN: {e}")
+            st.stop() # Stop if login fails
+
     try:
         model_path = hf_hub_download(repo_id=HF_MODEL_REPO, filename="best_model.joblib", repo_type="model")
         st.write(f"[DEBUG] Model downloaded to: {model_path}")
@@ -36,6 +51,9 @@ def load_artifacts():
 
         st.write("[DEBUG] Artifacts loaded successfully.")
         return model, label_encoders
+    except HfHubHTTPError as http_e:
+        st.error(f"[ERROR] Hugging Face Hub HTTP Error during artifact download: {http_e}. This often means permissions issues or wrong repo/file ID. Check your HF_TOKEN and repository access.")
+        st.stop()
     except Exception as e:
         st.error(f"[ERROR] Failed to load artifacts: {e}")
         st.stop() # Stop the app if artifacts can't be loaded
