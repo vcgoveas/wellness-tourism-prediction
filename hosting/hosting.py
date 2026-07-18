@@ -12,7 +12,7 @@ DEPLOYMENT_DIR = "deployment"
 # Hugging Face login (token should be set in env or passed)
 HF_TOKEN = os.environ.get("HF_TOKEN")
 if not HF_TOKEN:
-    print('HF_TOKEN environment variable not set. Please set it.')
+    print("HF_TOKEN environment variable not set. Please set it.")
     exit(1)
 
 login(token=HF_TOKEN)
