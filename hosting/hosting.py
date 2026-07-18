@@ -19,8 +19,7 @@ login(token=HF_TOKEN)
 api = HfApi(token=HF_TOKEN)
 
 def push_to_hf_space():
-    print("
---- Pushing files to Hugging Face Space: {} ---".format(HF_SPACE_REPO))
+    print("\n--- Pushing files to Hugging Face Space: {} ---".format(HF_SPACE_REPO))
 
     # 1. Create the Hugging Face Space repo if it doesn't exist
     try:
@@ -44,8 +43,7 @@ def push_to_hf_space():
                 repo_id=HF_SPACE_REPO,
                 repo_type="space",
             )
-    print("
-All deployment files pushed to {}.".format(HF_SPACE_REPO))
+    print("\nAll deployment files pushed to {}.".format(HF_SPACE_REPO))
     print("Check your Space at: https://huggingface.co/spaces/{}.".format(HF_SPACE_REPO))
 
 if __name__ == "__main__":
