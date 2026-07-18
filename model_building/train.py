@@ -8,9 +8,10 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import RandomForestClassifier
-from huggingface_hub import hf_hub_download, HfApi, create_repo
+from huggingface_hub import hf_hub_download, HfApi, create_repo, login
 from huggingface_hub.utils import RepositoryNotFoundError
 import mlflow
+from sklearn.metrics import accuracy_score
 
 # Configuration from environment variables or hardcoded
 HF_USERNAME = os.environ.get('HF_USERNAME', 'vgoveas')
@@ -18,8 +19,9 @@ HF_DATASET_REPO = os.environ.get('HF_DATASET_REPO', 'vgoveas/tourism-dataset')
 HF_MODEL_REPO = os.environ.get('HF_MODEL_REPO', 'vgoveas/tourism-prediction-model')
 HF_TOKEN = os.environ.get('HF_TOKEN')
 
-# Authenticate with Hugging Face
-api = HfApi(token=HF_TOKEN)
+# Authenticate with Hugging Face by explicitly logging in
+login(token=HF_TOKEN)
+api = HfApi() # HfApi will now pick up the token from the authenticated session
 
 # --- 1. Load Data and Label Encoders ---
 print("Loading data and label encoders from Hugging Face...")
@@ -65,7 +67,8 @@ print("Model training complete.")
 # --- 4. Evaluate Model (Optional, can be logged to MLflow if tracking is enabled in CI/CD) ---
 # In a real CI/CD, you might log metrics here to a remote MLflow server
 # For simplicity, we'll just print a confirmation.
-accuracy = pipeline.score(X_test, y_test)
+y_pred = pipeline.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
 print(f"Test Accuracy of the trained model: {accuracy:.4f}")
 
 # --- 5. Save Model and Label Encoders for Deployment ---
