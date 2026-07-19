@@ -6,4 +6,5 @@ python3 -m streamlit run app.py \
     --server.address 0.0.0.0 \
     --server.headless true \
     --browser.gatherUsageStats false \
-    --server.enableCORS false
+    --server.enableCORS false \
+    --server.enableXsrfProtection false
