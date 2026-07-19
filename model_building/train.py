@@ -91,7 +91,7 @@ joblib.dump(label_encoders, LABEL_ENCODERS_PATH_LOCAL)
 print(f"Trained model saved locally to {MODEL_PATH_LOCAL}")
 print(f"Label encoders saved locally to {LABEL_ENCODERS_PATH_LOCAL}")
 
-# --- 6. Upload Model to Hugging Face Model Hub --- 
+# --- 6. Upload Model to Hugging Face Model Hub ---
 print(f"Uploading model to Hugging Face Model Hub: {HF_MODEL_REPO}...")
 try:
     api.repo_info(repo_id=HF_MODEL_REPO, repo_type="model")
